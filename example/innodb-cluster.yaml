@@ -1,0 +1,16 @@
+apiVersion: ops.iflytek.com/v1alpha1
+kind: MysqlOperator
+metadata:
+  name: mysql-operator
+  namespace: mysql-operator
+spec:
+  mysql:
+    size: 3
+    image: mysql/mysql-server:8.0.19
+    multiMaster: true
+    envs:
+    - name: MYSQL_ROOT_PASSWORD
+      value: R00Tmysql
+    ports:
+      - port: 3306
+        targetPort: 3306

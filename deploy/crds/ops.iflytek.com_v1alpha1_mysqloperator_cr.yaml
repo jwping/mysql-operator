@@ -1,0 +1,7 @@
+apiVersion: ops.iflytek.com/v1alpha1
+kind: MysqlOperator
+metadata:
+  name: example-mysqloperator
+spec:
+  # Add fields here
+  size: 3
