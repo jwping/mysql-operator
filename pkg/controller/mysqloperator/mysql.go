@@ -223,7 +223,7 @@ func (r *ReconcileMysqlOperator) MysqlManager() {
 			Logger.Info("Cluster not found, judge cluster not created")
 			if badpodlist, boval := mysqlbelong.createClusters(r); boval == false {
 				Logger.Info("Cluster creation failed, clear all")
-				mysqlbelong.clearAll(r)
+				// mysqlbelong.clearAll(r)
 			} else {
 				mysqlbelong.removePod(r, badpodlist)
 				badpodlist = mysqlbelong.InstanceClusters(r)
