@@ -13,6 +13,8 @@ COPY build/bin /usr/local/bin
 
 RUN yum install -y https://dev.mysql.com/get/mysql80-community-release-el8-1.noarch.rpm && \
     yum install -y mysql-community-client mysql-shell && \
+    chmod +x /usr/local/bin/user_setup && \
+    chmod +x /usr/local/bin/entrypoint && \
     /usr/local/bin/user_setup
 
 ENTRYPOINT ["/usr/local/bin/entrypoint"]

@@ -17,7 +17,7 @@ spec:
       containers:
         - name: mysql-operator
           # Replace this with the built image name
-          image: registry.cn-shanghai.aliyuncs.com/anshan/mysql-operator:v0.0.1
+          image: registry.cn-shanghai.aliyuncs.com/anshan/mysql-operator:v0.0.3
           command:
           - mysql-operator
           imagePullPolicy: Always

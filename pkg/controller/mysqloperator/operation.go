@@ -14,6 +14,7 @@ import (
 func NewStatefulSet(app *opsv1alpha1.MysqlOperator) *appsv1.StatefulSet {
 	labels := map[string]string{"app": app.Name, "mysql": "operator"}
 	selector := &metav1.LabelSelector{MatchLabels: labels}
+	fmt.Printf("\nVolumeSource: %v\n", app.Spec.Mysql.VolumeSource)
 	return &appsv1.StatefulSet{
 		TypeMeta: metav1.TypeMeta{
 			APIVersion: "apps/v1",
@@ -41,6 +42,7 @@ func NewStatefulSet(app *opsv1alpha1.MysqlOperator) *appsv1.StatefulSet {
 				Spec: corev1.PodSpec{
 					// HostNetwork: true,
 					Containers: newContainers(app),
+					Volumes:    []corev1.Volume{corev1.Volume{Name: "mysqldata", VolumeSource: app.Spec.Mysql.VolumeSource}},
 				},
 			},
 
@@ -66,11 +68,13 @@ func newContainers(app *opsv1alpha1.MysqlOperator) []corev1.Container {
 			Ports:           containerPorts,
 			ImagePullPolicy: corev1.PullIfNotPresent,
 			Env:             envlist,
+			VolumeMounts:    []corev1.VolumeMount{corev1.VolumeMount{Name: "mysqldata", MountPath: "/var/lib/mysql"}},
 			Command: []string{
 				"/bin/bash",
 				"-ecx",
 				fmt.Sprintf("index=$(cat /etc/hostname | grep -o '[^-]*$');base=1000;/entrypoint.sh --server_id=$(expr $base + $index) --datadir=/var/lib/mysql --user=mysql --gtid_mode=ON --log-bin --binlog_checksum=NONE --enforce_gtid_consistency=ON --log-slave-updates=ON --binlog-format=ROW --master-info-repository=TABLE --relay-log-info-repository=TABLE --transaction-write-set-extraction=XXHASH64 --relay-log=%s-${index}-relay-bin --report-host=%s-${index}.%s --log-error-verbosity=3", app.Name, app.Name, app.Name),
 			},
+
 			// Args: []string{
 			// 	"--server_id=$(expr $base + $index)",
 			// },

@@ -8,9 +8,12 @@ spec:
     size: 3
     image: mysql/mysql-server:8.0.19
     multiMaster: true
+    volumeSource:
+      hostPath:
+        path: /data/mysqldata
     envs:
     - name: MYSQL_ROOT_PASSWORD
       value: R00Tmysql
     ports:
-      - port: 3306
-        targetPort: 3306
+    - port: 3306
+      targetPort: 3306
