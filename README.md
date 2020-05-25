@@ -69,13 +69,15 @@ spec:
     size: 3
     image: mysql/mysql-server:8.0.19
     multiMaster: true
+    volumeSource:
+      hostPath:
+        path: /data/mysqldata
     envs:
     - name: MYSQL_ROOT_PASSWORD
       value: R00Tmysql
     ports:
-      - port: 3306
-        targetPort: 3306
-
+    - port: 3306
+      targetPort: 3306
 
 [root@master mysql-operator]# kubectl apply -f example/innodb-cluster.yaml 
 mysqloperator.ops.iflytek.com/mysql-operator created
@@ -83,6 +85,7 @@ mysqloperator.ops.iflytek.com/mysql-operator created
 
 * 例子中的`size`指定为3，通过修改该参数可指定mysql实例的数量
 * 请确保使用的的镜像为`mysql-server`而非`mysql`
+* 可以使用`volumeSource`指定每个实例的持久化存储点（容器内挂载点为`/var/lib/mysql`数据目录，当前版本暂不支持修改），支持`nfs、hostPath、awsElasticBlockStore、iscsi`等挂载模式，同步官方。
 * 通过`multiMaster: true`可指定开启多主模式
 * 修改`MYSQL_ROOT_PASSWORD`的`value`可指定Mysql Root用户的密码，默认为`R00Tmysql`
 
